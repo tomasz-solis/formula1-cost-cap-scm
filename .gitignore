@@ -1,0 +1,22 @@
+# Data files
+data/raw/*
+data/processed/*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+*.egg-info/
+venv/
+.env
+
+# Outputs (we'll add selectively)
+outputs/figures/*
+outputs/results/*
+!outputs/figures/.gitkeep
+!outputs/results/.gitkeep
+
+# OS files
+.DS_Store
+.vscode/
