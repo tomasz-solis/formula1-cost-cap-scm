@@ -1,4 +1,5 @@
 # Data files
+data/
 data/raw/*
 data/processed/*
 
@@ -8,7 +9,7 @@ __pycache__/
 *$py.class
 .ipynb_checkpoints/
 *.egg-info/
-venv/
+ccenv/
 .env
 
 # Outputs (we'll add selectively)
