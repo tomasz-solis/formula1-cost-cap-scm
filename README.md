@@ -1,141 +1,130 @@
-# F1 Cost Cap Impact Analysis: A Synthetic Control Study
+# McLaren's Rise in Formula 1: A Data Analysis (2017-2024)
 
-**Status**: Work in Progress - Data Preparation Complete
+**Status**: Exploratory Analysis Complete | SCM Methodology Under Review
 
-## Project Goal
+## Project Overview
 
-Evaluate the heterogeneous effects of F1's 2021 cost cap regulation using Synthetic Control Methods. The core puzzle: why did McLaren surge to championship contention (666 points, P2 in 2024) while teams like Haas and Sauber remained in the midfield despite the same regulations?
+This project analyzes McLaren's performance trajectory in Formula 1 from 2017-2024, a period spanning major regulatory changes including the 2021 cost cap and 2022 technical reset.
 
-## Research Question
+**Initial Goal:** Apply Synthetic Control Methods to evaluate regulatory impact on competitive balance.
 
-"Did the bundled intervention of the 2021 cost cap and 2022 technical regulations enable McLaren to join the top pack, and if so, through what mechanism?"
+**Current Status:** Exploratory analysis complete. SCM methodology paused due to methodological complications (see below).
 
-**Hypothesis**: The cost cap only helped teams that could (1) spend up to the £145M limit AND (2) capitalize on talent released from top teams. McLaren met both conditions. Haas and Sauber met neither.
+## Key Findings from Exploratory Analysis
 
-## Methodology
+**McLaren's Trajectory:**
+- 2017-2020 average: 110 points (midfield tier)
+- 2022-2024 average: 376 points (elite tier)
+- 2024: 666 points, P2 in championship (career-best since 2007)
 
-**Method**: Synthetic Control Method (SCM)
+**Other Midfield Teams (2022-2024):**
+- Alpine: 119 points avg (no tier change)
+- Sauber: 25 points avg (no tier change)
+- Haas: 36 points avg (no tier change)
 
-**Treated Unit**: McLaren (2022-2024)
+**Observation:** McLaren was the only midfield team to achieve tier mobility post-regulation changes.
 
-**Donor Pool**:
-- Main analysis: Alpine, Sauber, Haas (excludes RB due to junior team structure)
-- Robustness check: Alpine, Sauber, Haas, RB (tests sensitivity to RB inclusion)
+## Methodological Challenges Identified
 
-**Time Periods**:
-- Pre-treatment: 2017-2020 (4 years before treatment, excludes 2021 transition year)
-- Treatment: 2022-2024 (cost cap + new technical regulations in effect)
+During exploratory analysis, several complications emerged for SCM application:
 
-**Why exclude 2021?**
-- 2021 cars were frozen carry-overs from 2020 (pandemic regulations)
-- Cost cap was active but didn't affect racing (development for 2022 started under cap)
-- Token-based development system made 2021 a messy transition year
+1. **Zero-Sum Constraint**
+   - Championship points are relative (McLaren gains → others lose)
+   - Violates SCM's independence assumption
 
-**Bundled Treatment Problem**: We cannot isolate the pure cost cap effect from the 2022 technical reset (ground effect return, 18-inch wheels, simplified aero). These interventions are bundled - we analyze their combined effect and acknowledge we cannot disentangle them.
+2. **Bundled Treatment**
+   - Cost cap (2021) + Technical reset (2022) cannot be isolated
+   - Cannot attribute effects to specific intervention
 
-## Validation Strategy
+3. **Non-Parallel Pre-Treatment Trends**
+   - McLaren: Steep climb (30 → 202 points, 2017-2020)
+   - Donors: Flat/volatile trajectories
+   - Violates SCM's parallel trends assumption
 
-**Placebo Tests**:
-1. Sauber (primary) - Cost cap not binding, stable team, no major shocks
-2. Haas (secondary) - Cost cap not binding, but 2021 tank year confounds interpretation
+4. **Unmeasured Confounders**
+   - McLaren's organizational changes (personnel, tech stack) began mid-2010s
+   - Pre-treatment surge likely reflects these changes, not cost cap
+   - Cannot isolate regulatory effect from organizational evolution
 
-**Expected Results**:
-- McLaren: Large treatment effect (synthetic McLaren << actual McLaren 2022-2024)
-- Sauber: No sustained treatment effect (synthetic Sauber ≈ actual Sauber)
-- Haas: 2022 rebound from tank year, but no sustained surge like McLaren
+## What's Been Completed
 
-**Robustness Checks**:
-- Include RB in donor pool (tests if exclusion biases results)
-- Race-level time series (validates within-season dynamics)
-- Pre-treatment period sensitivity (2017-2019 vs 2017-2020)
+### Data Preparation
+- Clean constructor championship data (2014-2024)
+- Team name canonicalization handling rebrands
+- Annual and race-level datasets created
+- Donor pool construction and validation
 
-## Key Findings (Preliminary)
+See: `notebooks/01_data_preparation.ipynb`
 
-**McLaren Trajectory**:
-- 2017-2020 average: 110 points
-- 2022-2024 average: 376 points
-- Increase: +242% 
+### Exploratory Analysis
+- Visualizations of McLaren vs donor pool trajectories
+- Pre-treatment trend analysis
+- Year-over-year change breakdowns
+- Race-level 2024 season analysis
+- Placebo unit comparisons (Sauber, Haas)
 
-**Mechanism (Hypothesized)**:
-- McLaren could spend up to £145M (cap was binding for them)
-- Hired Mercedes aerodynamicists released due to top team budget cuts
-- 2022 technical reset reduced infrastructure disadvantage
-- Sustained improvement 2023-2024 suggests organizational capability, not luck
+See: `notebooks/02_exploratory_analysis.ipynb`
 
-**Donor Pool Pre-Treatment (2017-2020 Average)**:
-- Alpine: 121 points
-- Haas: 34 points
-- Sauber: 26 points
-- RB: 84 points
+## Potential Future Directions
 
-McLaren's pre-treatment trajectory (30 → 62 → 145 → 202) shows strong upward trend, requiring careful synthetic control construction.
+This project could evolve in several ways:
+
+**Option A: Descriptive Case Study**
+- Comparative analysis: McLaren vs Alpine (similar resources, different outcomes)
+- Qualitative layer: organizational changes, hiring decisions
+- Honest conclusion: multiple factors, cannot isolate causality
+
+**Option B: Alternative Research Question**
+- Reframe around field compression (inequality metrics)
+- Analyze tier mobility patterns across multiple teams
+- Use different methodological approach (ITS, event study)
+
+**Option C: Different F1 Question**
+- Sprint race format impact on competitiveness
+- Driver vs constructor performance attribution
+- Home race advantage analysis
 
 ## Project Structure
 ```
-├── data/                              # F1 data (not in repo, .gitignored)
-│   ├── raw/              
-│   └── processed/        
+├── data/
+│   ├── raw/              # F1 data (not in repo)
+│   └── processed/        # Clean CSVs
 ├── notebooks/
-│   ├── 01_data_preparation.ipynb      # [COMPLETE]
-│   ├── 02_exploratory_analysis.ipynb  # [IN PROGRESS]
-│   ├── 03_scm_mclaren.ipynb
-│   ├── 04_placebo_tests.ipynb
-│   └── 05_sensitivity_analysis.ipynb
+│   ├── 01_data_preparation.ipynb       [COMPLETE]
+│   ├── 02_exploratory_analysis.ipynb   [COMPLETE]
+│   └── 03_scm_mclaren.ipynb            [PAUSED]
 ├── src/
-│   ├── team_name_mapping.py           # [COMPLETE]
-│   ├── scm_utils.py
-│   ├── visualization.py
-│   └── validation.py
+│   └── team_name_mapping.py            [COMPLETE]
 └── outputs/
-    ├── figures/
-    └── results/
+    └── figures/                         [6 visualizations created]
 ```
 
-## Data Sources
+## Technical Implementation
 
-- Constructor Championship Standings (2014-2024) via FastF1 Ergast API
+**Data Sources:**
+- FastF1 Ergast API (constructor standings 2014-2024)
 - Race-by-race results for within-season analysis
-- Team mappings handle historical rebrands (Renault→Alpine, Toro Rosso→AlphaTauri→RB)
 
-## Technical Notes
+**Tools:**
+- Python (pandas, numpy, scipy)
+- Plotly for interactive visualizations
+- Custom team name mapping for historical continuity
 
-**Team Name Canonicalization**: 
-The `team_name_mapping.py` module handles F1's frequent rebranding:
-- Tracks institutional continuity (Alpine = Renault rebrand, same team)
-- Identifies ownership shocks (Williams 2020 Dorilton takeover, Aston Martin 2020 Stroll investment)
-- Excludes defunct teams (Lotus, Manor, Caterham)
+**Key Learnings:**
+- Importance of validating SCM assumptions before implementation
+- Trade-offs between methodological rigor and research question fit
+- Value of exploratory analysis in identifying analytical challenges
 
-**Why RB is excluded from main donor pool**:
-- RB (formerly AlphaTauri, Toro Rosso) is Red Bull's junior team
-- Structural relationship with Red Bull Racing creates dependency
-- 2022 collapse (-107 points) was idiosyncratic, not representative
-- Included in robustness check to validate results are stable
+## Reflections
 
-## Causal Inference Learning
+This project demonstrates an important aspect of rigorous data analysis: recognizing when a chosen methodology doesn't fit the research question, even after significant investment in data preparation.
 
-This project applies Synthetic Control Methods to a real-world policy question with messy features:
-- Bundled treatment (cannot isolate cost cap from technical reset)
-- Zero-sum outcomes (championship points are relative)
-- General equilibrium effects (talent reallocation across teams)
-- Heterogeneous treatment effects (cap binding for some teams, not others)
+**The exploratory work revealed that:**
+- McLaren's rise is real and substantial
+- Multiple confounding factors make causal attribution difficult
+- Honest acknowledgment of limitations is more valuable than forced conclusions
 
-The analysis prioritizes honest acknowledgment of limitations over overclaiming causal certainty.
-
-## Status
-
-- [x] Project setup and repository structure
-- [x] Team name canonicalization with institutional continuity tracking
-- [x] Data preparation pipeline (annual + race-level datasets)
-- [x] Donor pool construction (main + robustness)
-- [ ] Exploratory data analysis and visualization
-- [ ] SCM implementation (McLaren)
-- [ ] Placebo tests (Sauber, Haas)
-- [ ] Sensitivity analysis
-- [ ] Portfolio documentation
-
-## Portfolio Narrative
-
-"The F1 cost cap reduced inequality but didn't eliminate it. McLaren surged because they could spend up to the £145M cap AND capitalize on talent released from top teams. Teams like Haas and Sauber, who couldn't spend £145M anyway, saw no sustained improvement. Institutional capacity to utilize regulatory constraints matters more than the regulation itself."
+**Key takeaway:** Knowing when NOT to apply a method is as important as knowing how to apply it.
 
 ---
 

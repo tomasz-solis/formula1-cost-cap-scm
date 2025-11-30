@@ -1,7 +1,5 @@
 # Data files
-data/
 data/raw/*
-data/processed/*
 
 # Python
 __pycache__/
@@ -11,12 +9,6 @@ __pycache__/
 *.egg-info/
 ccenv/
 .env
-
-# Outputs (we'll add selectively)
-outputs/figures/*
-outputs/results/*
-!outputs/figures/.gitkeep
-!outputs/results/.gitkeep
 
 # OS files
 .DS_Store
